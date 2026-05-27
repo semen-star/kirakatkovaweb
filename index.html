@@ -25,7 +25,7 @@
           </div>
           <ul class="menu-list js-menu-list">
             <li class="menu-item"><a class="link" href="/">Главная</a></li>
-            <li class="menu-item"><a class="link" href="/s-yomki">Портфолио</a></li>
+            <li class="menu-item"><a class="link" href="head/portfolio/index.html">Портфолио</a></li>
             <li class="menu-item"><a class="link" href="/services">Услуги</a></li>
             <li class="menu-item"><a class="link" href="/contacts">Контакты</a></li>
           </ul>
@@ -95,10 +95,14 @@
         </div>
       </section>
 
-      <!-- разделитель (синий с точками) - на всю ширину -->
-      <section class="sections-container divider-fullwidth">
-        <div class="divider-wrapper">
-          <div class="dotted-divider"></div>
+      <!-- разделитель красивый -->
+      <section class="sections-container divider-section">
+        <div class="sections-container-inner">
+          <div class="elegant-divider">
+            <span class="divider-line"></span>
+            <span class="divider-icon"><i class="fas fa-camera"></i></span>
+            <span class="divider-line"></span>
+          </div>
         </div>
       </section>
 
@@ -120,7 +124,6 @@
               <div class="slider-section slider js-slider" data-mode="smartFit" data-delay="3000">
                 <div class="slider-viewport js-slider-viewport">
                   <div class="slides js-slides">
-                    <!-- Все слайды с одинаковой высотой через object-fit cover -->
                     <div class="slide"><img src="https://i.wfolio.ru/x/D48ScH1DA6jxU_uSH-Or-C0cJClpP-QP/lEAL128xEMPGM2o_rKw_kMPHKR9vAJ80/8gKyqtS2ssIUOPNcxEXMdHcZR3vWiyGV/SAZjD5RGDSIn76IqCcHq5zEpC2fnywYE/XrTSmqZX5_AfbCvK_6L2gg.jpg" alt="slider 1" /></div>
                     <div class="slide"><img src="https://i.wfolio.ru/x/D48ScH1DA6jxU_uSH-Or-C0cJClpP-QP/lEAL128xEMPGM2o_rKw_kMPHKR9vAJ80/FOuOqkHB5tz2GjnraBuXnsL-5hoUb7Gq/mny1w57H_iZHVBX5H8d2hBkOaUP1zF7E/Wo-wd7qMRWVnmlLo-OixdQ.jpg" alt="slider 2" /></div>
                     <div class="slide"><img src="https://i.wfolio.ru/x/D48ScH1DA6jxU_uSH-Or-C0cJClpP-QP/lEAL128xEMPGM2o_rKw_kMPHKR9vAJ80/TB_Ld1eGvp-aJr7QLmnwjhX3lgfV7zRf/jSqb-cb_1VPYWzZk8oYUAOMPh8pKhqpf/urszBXdxSbmj7NGqNfuK6w.jpg" alt="slider 3" /></div>
@@ -181,7 +184,7 @@
 
     </main>
 
-    <!-- ФУТЕР (без wfolio) -->
+    <!-- ФУТЕР -->
     <footer class="page-footer js-footer">
       <div class="inner">
         <div class="footer-content text-section wysiwyg"><p>KARKT</p></div>
@@ -189,11 +192,11 @@
     </footer>
   </div>
 
-  <!-- Плавающие кнопки -->
+  <!-- ПЛАВАЮЩИЕ КНОПКИ (только наверх) -->
   <div class="floating-buttons -right-bottom">
-    <button class="floating-button -share js-share-trigger" aria-label="Поделиться"><i class="fas fa-share-alt"></i></button>
     <button class="floating-button -top js-back-to-top" aria-label="Наверх"><i class="fas fa-arrow-up"></i></button>
   </div>
+
   <!-- КРУГЛАЯ КНОПКА СВЯЗИ -->
   <button class="contact-chat-btn js-contact-chat" aria-label="Связаться">
     <i class="fas fa-comment-dots"></i>
@@ -235,14 +238,12 @@
             <a class="contact-modal__btn contact-modal__btn--inst" href="https://www.instagram.com/photo.karkt" target="_blank">
               <i class="fab fa-instagram"></i> Instagram
             </a>
-            <a class="contact-modal__btn contact-modal__btn--save" href="/card/dDg8a6OZ/ru.vcf" rel="nofollow">
-              <i class="fas fa-download"></i> Сохранить контакт
-            </a>
           </div>
         </div>
       </div>
     </div>
   </div>
+
   <script src="script.js"></script>
 </body>
 </html>

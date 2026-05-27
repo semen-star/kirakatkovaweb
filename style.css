@@ -69,7 +69,7 @@ img {
   .col-lg-6 { width: 50%; }
 }
 
-/* ---------- ШАПКА (исправлено выравнивание) ---------- */
+/* ---------- ШАПКА ---------- */
 .page-header {
   position: fixed;
   top: 0;
@@ -148,12 +148,10 @@ img {
   align-items: center;
   justify-content: center;
 }
-/* Убираем точку после пунктов меню */
 .menu-item::after {
   display: none !important;
 }
 
-/* Мобильная шапка */
 @media (max-width: 767px) {
   .menu .inner {
     flex-direction: column;
@@ -167,40 +165,50 @@ img {
   }
 }
 
-/* ---------- РАЗДЕЛИТЕЛЬ С ТОЧКАМИ (на всю ширину) ---------- */
-.divider-fullwidth {
-  padding: 0 !important;
+/* ---------- ЭЛЕГАНТНЫЙ РАЗДЕЛИТЕЛЬ ---------- */
+.divider-section {
   background-color: #254568;
+  padding: 40px 0;
 }
-.divider-wrapper {
-  width: 100%;
-  padding: 30px 0;
+.elegant-divider {
   display: flex;
-  justify-content: center;
   align-items: center;
-}
-.dotted-divider {
-  display: flex;
   justify-content: center;
-  align-items: center;
   gap: 20px;
-}
-.dotted-divider::before,
-.dotted-divider::after {
-  content: "• • •";
-  font-size: 24px;
-  letter-spacing: 8px;
-  color: rgba(255,255,255,0.6);
-}
-.dotted-divider {
   width: 100%;
-  max-width: 300px;
-  height: 2px;
-  background: repeating-linear-gradient(90deg, rgba(255,255,255,0.6), rgba(255,255,255,0.6) 8px, transparent 8px, transparent 16px);
+}
+.divider-line {
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.6), rgba(255,255,255,0.6), transparent);
+}
+.divider-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,0.1);
+  border-radius: 50%;
+  font-size: 18px;
+  color: rgba(255,255,255,0.8);
+  transition: all 0.3s ease;
+}
+.elegant-divider:hover .divider-icon {
+  background: rgba(255,255,255,0.2);
+  transform: scale(1.1);
 }
 @media (max-width: 768px) {
-  .dotted-divider {
-    max-width: 200px;
+  .divider-section {
+    padding: 30px 0;
+  }
+  .divider-icon {
+    width: 32px;
+    height: 32px;
+    font-size: 14px;
+  }
+  .elegant-divider {
+    gap: 12px;
   }
 }
 
@@ -385,7 +393,7 @@ img {
   text-align: left;
 }
 
-/* ---------- СЛАЙДЕР (исправлен — фото не ломаются) ---------- */
+/* ---------- СЛАЙДЕР ---------- */
 .slider-section {
   position: relative;
 }
@@ -470,7 +478,7 @@ img {
   opacity: 0.7;
 }
 
-/* ---------- ФУТЕР (без wfolio) ---------- */
+/* ---------- ФУТЕР ---------- */
 .page-footer {
   text-align: center;
   padding: 40px 0 30px;
@@ -516,7 +524,195 @@ img {
   transition: opacity 0.3s;
 }
 
-/* Контакты */
+/* ---------- КРУГЛАЯ КНОПКА СВЯЗИ ---------- */
+.contact-chat-btn {
+  position: fixed;
+  bottom: 30px;
+  left: 30px;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #254568;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 500;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+}
+.contact-chat-btn i {
+  font-size: 28px;
+  color: white;
+}
+.contact-chat-btn:hover {
+  background: #1a3550;
+  transform: scale(1.08);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+}
+.contact-chat-btn:active {
+  transform: scale(0.95);
+}
+
+/* ---------- МОДАЛЬНОЕ ОКНО ---------- */
+.contact-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s ease, opacity 0.3s ease;
+}
+.contact-modal.is-open {
+  visibility: visible;
+  opacity: 1;
+}
+.contact-modal__overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(5px);
+}
+.contact-modal__window {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(0.9);
+  width: 90%;
+  max-width: 480px;
+  background: #1e1e1e;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: transform 0.3s ease;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.contact-modal.is-open .contact-modal__window {
+  transform: translate(-50%, -50%) scale(1);
+}
+.contact-modal__close {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  transition: all 0.2s;
+}
+.contact-modal__close i {
+  font-size: 18px;
+  color: white;
+}
+.contact-modal__close:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: rotate(90deg);
+}
+.contact-modal__card {
+  padding: 40px 30px 35px;
+  text-align: center;
+}
+.contact-modal__avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 20px;
+  border: 3px solid #254568;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+.contact-modal__name {
+  font-size: 28px;
+  font-family: 'Playfair Display', serif;
+  color: white;
+  margin-bottom: 6px;
+}
+.contact-modal__occupation {
+  font-size: 14px;
+  color: rgba(255, 255, 255, 0.7);
+  letter-spacing: 1px;
+  margin-bottom: 25px;
+}
+.contact-modal__info {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 16px;
+  padding: 18px;
+  margin-bottom: 25px;
+}
+.contact-modal__phone,
+.contact-modal__email {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 8px 0;
+}
+.contact-modal__phone i,
+.contact-modal__email i {
+  width: 20px;
+  color: #254568;
+  font-size: 16px;
+}
+.contact-modal__phone a,
+.contact-modal__email a {
+  color: white;
+  text-decoration: none;
+  font-size: 15px;
+  transition: color 0.2s;
+}
+.contact-modal__phone a:hover,
+.contact-modal__email a:hover {
+  color: #6a7d92;
+}
+.contact-modal__buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  justify-content: center;
+}
+.contact-modal__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 18px;
+  border-radius: 40px;
+  font-size: 13px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.2s;
+  background: rgba(255, 255, 255, 0.08);
+  color: white;
+}
+.contact-modal__btn i {
+  font-size: 16px;
+}
+.contact-modal__btn--vk:hover {
+  background: #4c75a3;
+  transform: translateY(-2px);
+}
+.contact-modal__btn--tg:hover {
+  background: #2aabee;
+  transform: translateY(-2px);
+}
+.contact-modal__btn--inst:hover {
+  background: #d62976;
+  transform: translateY(-2px);
+}
+
+/* Контакты в секции */
 .contacts-links a {
   color: var(--color-button-outline);
   text-decoration: none;
@@ -560,255 +756,21 @@ img {
   .slide img {
     aspect-ratio: 4/3;
   }
-}
-
-
-/* ---------- КРУГЛАЯ КНОПКА СВЯЗИ ---------- */
-.contact-chat-btn {
-  position: fixed;
-  bottom: 30px;
-  left: 30px;
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: #254568;
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 500;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-.contact-chat-btn i {
-  font-size: 28px;
-  color: white;
-}
-
-.contact-chat-btn:hover {
-  background: #1a3550;
-  transform: scale(1.08);
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
-}
-
-.contact-chat-btn:active {
-  transform: scale(0.95);
-}
-
-/* ---------- МОДАЛЬНОЕ ОКНО ---------- */
-.contact-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1000;
-  visibility: hidden;
-  opacity: 0;
-  transition: visibility 0.3s ease, opacity 0.3s ease;
-}
-
-.contact-modal.is-open {
-  visibility: visible;
-  opacity: 1;
-}
-
-.contact-modal__overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.85);
-  backdrop-filter: blur(5px);
-}
-
-.contact-modal__window {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(0.9);
-  width: 90%;
-  max-width: 480px;
-  background: #1e1e1e;
-  border-radius: 24px;
-  overflow: hidden;
-  transition: transform 0.3s ease;
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.contact-modal.is-open .contact-modal__window {
-  transform: translate(-50%, -50%) scale(1);
-}
-
-.contact-modal__close {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 10;
-  transition: all 0.2s;
-}
-
-.contact-modal__close i {
-  font-size: 18px;
-  color: white;
-}
-
-.contact-modal__close:hover {
-  background: rgba(255, 255, 255, 0.25);
-  transform: rotate(90deg);
-}
-
-.contact-modal__card {
-  padding: 40px 30px 35px;
-  text-align: center;
-}
-
-.contact-modal__avatar {
-  width: 100px;
-  height: 100px;
-  border-radius: 50%;
-  object-fit: cover;
-  margin: 0 auto 20px;
-  border: 3px solid #254568;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-}
-
-.contact-modal__name {
-  font-size: 28px;
-  font-family: 'Playfair Display', serif;
-  color: white;
-  margin-bottom: 6px;
-}
-
-.contact-modal__occupation {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  letter-spacing: 1px;
-  margin-bottom: 25px;
-}
-
-.contact-modal__info {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 16px;
-  padding: 18px;
-  margin-bottom: 25px;
-}
-
-.contact-modal__phone,
-.contact-modal__email {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 12px;
-  padding: 8px 0;
-}
-
-.contact-modal__phone i,
-.contact-modal__email i {
-  width: 20px;
-  color: #254568;
-  font-size: 16px;
-}
-
-.contact-modal__phone a,
-.contact-modal__email a {
-  color: white;
-  text-decoration: none;
-  font-size: 15px;
-  transition: color 0.2s;
-}
-
-.contact-modal__phone a:hover,
-.contact-modal__email a:hover {
-  color: #6a7d92;
-}
-
-.contact-modal__buttons {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  justify-content: center;
-}
-
-.contact-modal__btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 10px;
-  padding: 10px 18px;
-  border-radius: 40px;
-  font-size: 13px;
-  font-weight: 500;
-  text-decoration: none;
-  transition: all 0.2s;
-  background: rgba(255, 255, 255, 0.08);
-  color: white;
-}
-
-.contact-modal__btn i {
-  font-size: 16px;
-}
-
-.contact-modal__btn--vk:hover {
-  background: #4c75a3;
-  transform: translateY(-2px);
-}
-
-.contact-modal__btn--tg:hover {
-  background: #2aabee;
-  transform: translateY(-2px);
-}
-
-.contact-modal__btn--inst:hover {
-  background: #d62976;
-  transform: translateY(-2px);
-}
-
-.contact-modal__btn--save {
-  background: #254568;
-  width: 100%;
-  justify-content: center;
-  margin-top: 5px;
-}
-
-.contact-modal__btn--save:hover {
-  background: #1a3550;
-  transform: translateY(-2px);
-}
-
-/* Адаптация для мобильных */
-@media (max-width: 768px) {
   .contact-chat-btn {
     bottom: 20px;
     left: 20px;
     width: 52px;
     height: 52px;
   }
-  
   .contact-chat-btn i {
     font-size: 24px;
   }
-  
   .contact-modal__card {
     padding: 30px 20px 25px;
   }
-  
   .contact-modal__name {
     font-size: 24px;
   }
-  
   .contact-modal__btn {
     padding: 8px 14px;
     font-size: 12px;

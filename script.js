@@ -98,37 +98,6 @@ document.addEventListener('DOMContentLoaded', function() {
   }
   initMainSlider();
 
-  // Поделиться
-  const shareBtn = document.querySelector('.js-share-trigger');
-  if (shareBtn) {
-    shareBtn.addEventListener('click', () => {
-      if (navigator.share) {
-        navigator.share({
-          title: 'Портретный фотограф KARKT',
-          text: 'Посмотрите мои работы!',
-          url: window.location.href,
-        }).catch(() => {});
-      } else {
-        const dummy = document.createElement('textarea');
-        dummy.value = window.location.href;
-        document.body.appendChild(dummy);
-        dummy.select();
-        document.execCommand('copy');
-        document.body.removeChild(dummy);
-        alert('Ссылка скопирована!');
-      }
-    });
-  }
-
-  // Анимация секций
-  const sections = document.querySelectorAll('.sections-container');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('-visible'); });
-  }, { threshold: 0.1 });
-  sections.forEach(section => observer.observe(section));
-});
-
-
   // ---------- МОДАЛЬНОЕ ОКНО С КОНТАКТАМИ ----------
   const chatBtn = document.querySelector('.js-contact-chat');
   const modal = document.querySelector('.js-contact-modal');
@@ -164,3 +133,11 @@ document.addEventListener('DOMContentLoaded', function() {
       closeModal();
     }
   });
+
+  // Анимация секций
+  const sections = document.querySelectorAll('.sections-container');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('-visible'); });
+  }, { threshold: 0.1 });
+  sections.forEach(section => observer.observe(section));
+});
