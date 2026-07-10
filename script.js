@@ -1,143 +1,94 @@
-document.addEventListener('DOMContentLoaded', function() {
-  const header = document.querySelector('.page-header');
-  const backToTop = document.querySelector('.js-back-to-top');
-  const downArrow = document.querySelector('.js-cover-down-arrow');
+(function(){
+  // Header scroll state
+  var header = document.getElementById('siteHeader');
+  var onScroll = function(){
+    if(window.scrollY > 40){ header.classList.add('is-scrolled'); }
+    else{ header.classList.remove('is-scrolled'); }
+  };
+  document.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
 
-  // Шапка
-  function updateHeader() {
-    if (!header) return;
-    if (window.scrollY > 50) {
-      header.classList.add('-visible');
-      header.classList.add('-scrolled');
-    } else {
-      header.classList.add('-visible');
-      header.classList.remove('-scrolled');
-      if (window.scrollY < 10) header.classList.remove('-visible');
-    }
-  }
-  updateHeader();
-  window.addEventListener('scroll', updateHeader);
+  // Mobile nav
+  var toggle = document.getElementById('menuToggle');
+  var mobileNav = document.getElementById('mobileNav');
+  var closeBtn = document.getElementById('mobileNavClose');
+  function openNav(){ mobileNav.classList.add('is-open'); toggle.setAttribute('aria-expanded','true'); }
+  function closeNav(){ mobileNav.classList.remove('is-open'); toggle.setAttribute('aria-expanded','false'); }
+  toggle.addEventListener('click', openNav);
+  closeBtn.addEventListener('click', closeNav);
+  mobileNav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeNav); });
+  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeNav(); });
 
-  // Кнопка наверх
-  if (backToTop) {
-    function updateBackToTop() {
-      if (window.scrollY > 400) {
-        backToTop.style.opacity = '1';
-        backToTop.style.pointerEvents = 'auto';
-      } else {
-        backToTop.style.opacity = '0';
-        backToTop.style.pointerEvents = 'none';
-      }
-    }
-    updateBackToTop();
-    window.addEventListener('scroll', updateBackToTop);
-    backToTop.addEventListener('click', function(e) {
-      e.preventDefault();
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    });
+  // Hero slider
+  var slides = document.querySelectorAll('.hero-slide');
+  var frameCounter = document.getElementById('frameCurrent');
+  var current = 0;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(!reducedMotion && slides.length > 1){
+    setInterval(function(){
+      slides[current].classList.remove('is-active');
+      current = (current + 1) % slides.length;
+      slides[current].classList.add('is-active');
+      frameCounter.textContent = String(current + 1).padStart(2,'0');
+    }, 5000);
   }
 
-  // Стрелка вниз
-  if (downArrow) {
-    downArrow.addEventListener('click', function() {
-      const firstSection = document.querySelector('.sections-container');
-      if (firstSection) firstSection.scrollIntoView({ behavior: 'smooth' });
-    });
+  // Scroll reveal
+  var revealEls = document.querySelectorAll('.reveal');
+  if('IntersectionObserver' in window){
+    var io = new IntersectionObserver(function(entries){
+      entries.forEach(function(entry){
+        if(entry.isIntersecting){ entry.target.classList.add('is-visible'); io.unobserve(entry.target); }
+      });
+    }, {threshold:.15});
+    revealEls.forEach(function(el){ io.observe(el); });
+  } else {
+    revealEls.forEach(function(el){ el.classList.add('is-visible'); });
   }
 
-  // Слайдер обложки
-  function initCoverSlider() {
-    const coverSlider = document.querySelector('.cover-slider');
-    if (!coverSlider) return;
-    const slides = coverSlider.querySelectorAll('.cover-slide');
-    if (slides.length <= 1) return;
-    let currentIndex = 0;
-    const delay = parseInt(coverSlider.dataset.delay) || 5000;
-    function showSlide(index) {
-      slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
-    }
-    function nextSlide() {
-      currentIndex = (currentIndex + 1) % slides.length;
-      showSlide(currentIndex);
-    }
-    showSlide(0);
-    setInterval(nextSlide, delay);
+  // Lightbox
+  var galleryImgs = Array.from(document.querySelectorAll('#gallery .frame img'));
+  var lightbox = document.getElementById('lightbox');
+  var lightboxImg = document.getElementById('lightboxImg');
+  var lightboxTag = document.getElementById('lightboxTag');
+  var lightboxClose = document.getElementById('lightboxClose');
+  var lightboxPrev = document.getElementById('lightboxPrev');
+  var lightboxNext = document.getElementById('lightboxNext');
+  var activeIndex = 0;
+  var lastFocused = null;
+
+  function showFrame(i){
+    activeIndex = (i + galleryImgs.length) % galleryImgs.length;
+    lightboxImg.src = galleryImgs[activeIndex].src;
+    lightboxImg.alt = galleryImgs[activeIndex].alt;
+    lightboxTag.textContent = 'KARKT · ' + String(activeIndex + 1).padStart(3,'0');
   }
-  initCoverSlider();
-
-  // Основной слайдер
-  function initMainSlider() {
-    const sliderContainer = document.querySelector('.slider-section.slider');
-    if (!sliderContainer) return;
-    const slidesContainer = sliderContainer.querySelector('.slides');
-    const slides = sliderContainer.querySelectorAll('.slide');
-    const prevBtn = sliderContainer.querySelector('.js-prev');
-    const nextBtn = sliderContainer.querySelector('.js-next');
-    const currentSpan = sliderContainer.querySelector('.js-slider-current-slide');
-    const totalSpan = sliderContainer.querySelector('.js-slider-total-slides');
-    if (!slides.length) return;
-    let index = 0;
-    const total = slides.length;
-    if (totalSpan) totalSpan.textContent = total;
-    if (currentSpan) currentSpan.textContent = index + 1;
-    function updateSlider() {
-      if (slidesContainer) slidesContainer.style.transform = `translateX(-${index * 100}%)`;
-      if (currentSpan) currentSpan.textContent = index + 1;
-    }
-    function nextSlide() { index = (index + 1) % total; updateSlider(); }
-    function prevSlide() { index = (index - 1 + total) % total; updateSlider(); }
-    if (nextBtn) nextBtn.addEventListener('click', nextSlide);
-    if (prevBtn) prevBtn.addEventListener('click', prevSlide);
-    const delay = parseInt(sliderContainer.dataset.delay);
-    if (delay && delay > 0) {
-      let autoplayInterval = setInterval(nextSlide, delay);
-      sliderContainer.addEventListener('mouseenter', () => clearInterval(autoplayInterval));
-      sliderContainer.addEventListener('mouseleave', () => { autoplayInterval = setInterval(nextSlide, delay); });
-    }
-    updateSlider();
+  function openLightbox(i){
+    lastFocused = document.activeElement;
+    showFrame(i);
+    lightbox.classList.add('is-open');
+    lightboxClose.focus();
   }
-  initMainSlider();
-
-  // ---------- МОДАЛЬНОЕ ОКНО С КОНТАКТАМИ ----------
-  const chatBtn = document.querySelector('.js-contact-chat');
-  const modal = document.querySelector('.js-contact-modal');
-  const closeBtns = document.querySelectorAll('.js-modal-close');
-
-  function openModal() {
-    if (modal) {
-      modal.classList.add('is-open');
-      document.body.style.overflow = 'hidden';
-    }
+  function closeLightbox(){
+    lightbox.classList.remove('is-open');
+    if(lastFocused) lastFocused.focus();
   }
-
-  function closeModal() {
-    if (modal) {
-      modal.classList.remove('is-open');
-      document.body.style.overflow = '';
-    }
-  }
-
-  if (chatBtn) {
-    chatBtn.addEventListener('click', openModal);
-  }
-
-  if (closeBtns.length) {
-    closeBtns.forEach(btn => {
-      btn.addEventListener('click', closeModal);
-    });
-  }
-
-  // Закрытие по Escape
-  document.addEventListener('keydown', function(e) {
-    if (e.key === 'Escape' && modal && modal.classList.contains('is-open')) {
-      closeModal();
-    }
+  document.querySelectorAll('.frame-hit').forEach(function(btn){
+    btn.addEventListener('click', function(){ openLightbox(parseInt(btn.dataset.index,10)); });
+  });
+  lightboxClose.addEventListener('click', closeLightbox);
+  lightboxPrev.addEventListener('click', function(){ showFrame(activeIndex - 1); });
+  lightboxNext.addEventListener('click', function(){ showFrame(activeIndex + 1); });
+  lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
+  document.addEventListener('keydown', function(e){
+    if(!lightbox.classList.contains('is-open')) return;
+    if(e.key === 'Escape') closeLightbox();
+    if(e.key === 'ArrowLeft') showFrame(activeIndex - 1);
+    if(e.key === 'ArrowRight') showFrame(activeIndex + 1);
   });
 
-  // Анимация секций
-  const sections = document.querySelectorAll('.sections-container');
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('-visible'); });
-  }, { threshold: 0.1 });
-  sections.forEach(section => observer.observe(section));
-});
+  // Floating button -> contact
+  document.getElementById('fabContact').addEventListener('click', function(){
+    document.getElementById('contact').scrollIntoView({behavior: reducedMotion ? 'auto' : 'smooth'});
+  });
+})();
