@@ -12,26 +12,66 @@
   var toggle = document.getElementById('menuToggle');
   var mobileNav = document.getElementById('mobileNav');
   var closeBtn = document.getElementById('mobileNavClose');
-  function openNav(){ mobileNav.classList.add('is-open'); toggle.setAttribute('aria-expanded','true'); }
-  function closeNav(){ mobileNav.classList.remove('is-open'); toggle.setAttribute('aria-expanded','false'); }
+  var navFocusable = mobileNav.querySelectorAll('a, button');
+
+  function lockScroll(){ document.body.style.overflow = 'hidden'; }
+  function unlockScroll(){
+    if(!lightbox.classList.contains('is-open')){ document.body.style.overflow = ''; }
+  }
+  function openNav(){
+    mobileNav.classList.add('is-open');
+    mobileNav.setAttribute('aria-hidden','false');
+    toggle.setAttribute('aria-expanded','true');
+    lockScroll();
+    closeBtn.focus();
+  }
+  function closeNav(){
+    mobileNav.classList.remove('is-open');
+    mobileNav.setAttribute('aria-hidden','true');
+    toggle.setAttribute('aria-expanded','false');
+    unlockScroll();
+    toggle.focus();
+  }
   toggle.addEventListener('click', openNav);
   closeBtn.addEventListener('click', closeNav);
   mobileNav.querySelectorAll('a').forEach(function(a){ a.addEventListener('click', closeNav); });
-  document.addEventListener('keydown', function(e){ if(e.key === 'Escape') closeNav(); });
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'Escape' && mobileNav.classList.contains('is-open')) closeNav();
+    // простой focus trap внутри открытого мобильного меню
+    if(e.key === 'Tab' && mobileNav.classList.contains('is-open') && navFocusable.length){
+      var first = navFocusable[0];
+      var last = navFocusable[navFocusable.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
+  });
 
   // Hero slider
   var slides = document.querySelectorAll('.hero-slide');
   var frameCounter = document.getElementById('frameCurrent');
   var current = 0;
+  var heroTimer = null;
   var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(!reducedMotion && slides.length > 1){
-    setInterval(function(){
-      slides[current].classList.remove('is-active');
-      current = (current + 1) % slides.length;
-      slides[current].classList.add('is-active');
-      frameCounter.textContent = String(current + 1).padStart(2,'0');
-    }, 5000);
+
+  function advanceSlide(){
+    slides[current].classList.remove('is-active');
+    current = (current + 1) % slides.length;
+    slides[current].classList.add('is-active');
+    frameCounter.textContent = String(current + 1).padStart(2,'0');
   }
+  function startHero(){
+    if(reducedMotion || slides.length < 2 || heroTimer) return;
+    heroTimer = setInterval(advanceSlide, 5000);
+  }
+  function stopHero(){
+    clearInterval(heroTimer);
+    heroTimer = null;
+  }
+  startHero();
+  // экономим батарею и трафик, когда вкладка свёрнута (актуально на мобильных)
+  document.addEventListener('visibilitychange', function(){
+    if(document.hidden){ stopHero(); } else { startHero(); }
+  });
 
   // Scroll reveal
   var revealEls = document.querySelectorAll('.reveal');
@@ -67,10 +107,12 @@
     lastFocused = document.activeElement;
     showFrame(i);
     lightbox.classList.add('is-open');
+    lockScroll();
     lightboxClose.focus();
   }
   function closeLightbox(){
     lightbox.classList.remove('is-open');
+    unlockScroll();
     if(lastFocused) lastFocused.focus();
   }
   document.querySelectorAll('.frame-hit').forEach(function(btn){
@@ -80,12 +122,35 @@
   lightboxPrev.addEventListener('click', function(){ showFrame(activeIndex - 1); });
   lightboxNext.addEventListener('click', function(){ showFrame(activeIndex + 1); });
   lightbox.addEventListener('click', function(e){ if(e.target === lightbox) closeLightbox(); });
+  var lightboxFocusable = [lightboxPrev, lightboxNext, lightboxClose];
   document.addEventListener('keydown', function(e){
     if(!lightbox.classList.contains('is-open')) return;
     if(e.key === 'Escape') closeLightbox();
     if(e.key === 'ArrowLeft') showFrame(activeIndex - 1);
     if(e.key === 'ArrowRight') showFrame(activeIndex + 1);
+    if(e.key === 'Tab'){
+      var first = lightboxFocusable[0];
+      var last = lightboxFocusable[lightboxFocusable.length - 1];
+      if(e.shiftKey && document.activeElement === first){ e.preventDefault(); last.focus(); }
+      else if(!e.shiftKey && document.activeElement === last){ e.preventDefault(); first.focus(); }
+    }
   });
+
+  // Свайп для лайтбокса (мобильные)
+  var touchStartX = 0;
+  var touchStartY = 0;
+  lightbox.addEventListener('touchstart', function(e){
+    touchStartX = e.changedTouches[0].clientX;
+    touchStartY = e.changedTouches[0].clientY;
+  }, {passive:true});
+  lightbox.addEventListener('touchend', function(e){
+    var dx = e.changedTouches[0].clientX - touchStartX;
+    var dy = e.changedTouches[0].clientY - touchStartY;
+    if(Math.abs(dx) > 48 && Math.abs(dx) > Math.abs(dy)){
+      if(dx < 0) showFrame(activeIndex + 1);
+      else showFrame(activeIndex - 1);
+    }
+  }, {passive:true});
 
   // Floating button -> contact
   document.getElementById('fabContact').addEventListener('click', function(){
