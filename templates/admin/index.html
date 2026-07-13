@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админ панель KARKT</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/admin/static/css/admin.css">
+</head>
+<body>
+    <div class="admin-container">
+        <header class="admin-header">
+            <h1>⚡ KARKT Admin</h1>
+            <button id="logoutBtn" class="btn-danger">Выйти</button>
+        </header>
+        
+        <div id="loginForm" class="login-form">
+            <h2>Вход в админ панель</h2>
+            <input type="password" id="adminPassword" placeholder="Введите пароль">
+            <button id="loginBtn" class="btn-primary">Войти</button>
+            <div id="loginError" class="error"></div>
+        </div>
+        
+        <div id="adminContent" style="display:none;">
+            <!-- Навигация -->
+            <nav class="admin-nav">
+                <button class="nav-btn active" data-tab="gallery">Галерея</button>
+                <button class="nav-btn" data-tab="hero">Главный экран</button>
+                <button class="nav-btn" data-tab="about">Обо мне</button>
+                <button class="nav-btn" data-tab="blocks">Кастомные блоки</button>
+                <button class="nav-btn" data-tab="config">Настройки</button>
+            </nav>
+            
+            <!-- Вкладка: Галерея -->
+            <div class="tab-content" id="tab-gallery">
+                <div class="upload-section">
+                    <h3>Загрузить фото</h3>
+                    <form id="uploadForm">
+                        <input type="file" id="photoFile" accept="image/*" required>
+                        <input type="text" id="photoTitle" placeholder="Название">
+                        <textarea id="photoDescription" placeholder="Описание"></textarea>
+                        <select id="photoType">
+                            <option value="gallery">Галерея</option>
+                            <option value="hero">Главный экран</option>
+                            <option value="about">Обо мне</option>
+                        </select>
+                        <button type="submit" class="btn-primary">Загрузить</button>
+                    </form>
+                </div>
+                <div id="galleryGrid" class="gallery-grid"></div>
+            </div>
+            
+            <!-- Вкладка: Кастомные блоки -->
+            <div class="tab-content" id="tab-blocks" style="display:none;">
+                <div class="upload-section">
+                    <h3>Добавить блок</h3>
+                    <form id="blockForm">
+                        <select id="blockType" required>
+                            <option value="text">Текст</option>
+                            <option value="image">Изображение</option>
+                            <option value="gallery">Галерея</option>
+                        </select>
+                        <select id="blockPosition" required>
+                            <option value="top">Сверху</option>
+                            <option value="bottom">Снизу</option>
+                            <option value="left">Слева</option>
+                            <option value="right">Справа</option>
+                            <option value="hero">Герой секция</option>
+                            <option value="about">Обо мне</option>
+                        </select>
+                        <textarea id="blockContent" placeholder="Текст блока"></textarea>
+                        <button type="submit" class="btn-primary">Добавить блок</button>
+                    </form>
+                </div>
+                <div id="blocksList"></div>
+            </div>
+            
+            <!-- Вкладка: Настройки -->
+            <div class="tab-content" id="tab-config" style="display:none;">
+                <div class="config-form">
+                    <h3>Настройки сайта</h3>
+                    <form id="configForm">
+                        <div class="form-group">
+                            <label>Заголовок сайта</label>
+                            <input type="text" id="configTitle" name="title">
+                        </div>
+                        <div class="form-group">
+                            <label>Описание</label>
+                            <textarea id="configDescription" name="description"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Hero заголовок</label>
+                            <input type="text" id="configHeroHeading" name="hero_heading">
+                        </div>
+                        <div class="form-group">
+                            <label>Hero подзаголовок</label>
+                            <textarea id="configHeroSub" name="hero_sub"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Email</label>
+                            <input type="email" id="configEmail" name="contact_email">
+                        </div>
+                        <div class="form-group">
+                            <label>Телефон</label>
+                            <input type="text" id="configPhone" name="contact_phone">
+                        </div>
+                        <div class="form-group">
+                            <label>Custom CSS</label>
+                            <textarea id="configCss" name="custom_css" rows="5"></textarea>
+                        </div>
+                        <button type="submit" class="btn-primary">Сохранить настройки</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="/admin/static/js/admin.js"></script>
+</body>
+</html>
