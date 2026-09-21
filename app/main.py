@@ -8,6 +8,8 @@ import os
 
 from .config import settings
 from .routes import admin, api
+from .database import get_photos
+from .seo import router as seo_router, seo_context
 
 app = FastAPI()
 
@@ -25,14 +27,24 @@ app.mount("/uploads", StaticFiles(directory=str(uploads_path)), name="uploads")
 # Регистрируем роутеры
 app.include_router(admin.router)
 app.include_router(api.router)
+app.include_router(seo_router)  # /robots.txt, /sitemap.xml, /favicon.ico
 
 # Шаблоны
 templates = Jinja2Templates(directory="templates")
 
 @app.get("/admin")
 async def admin_page():
-    return templates.TemplateResponse("admin/index.html", {"request": {}})
+    # Админку не должно быть в поиске
+    return templates.TemplateResponse(
+        "admin/index.html", {"request": {}},
+        headers={"X-Robots-Tag": "noindex, nofollow"},
+    )
 
 @app.get("/", response_class=HTMLResponse)
 async def index(request: Request):
-    return templates.TemplateResponse("site/index.html", {"request": request})
+    context = {
+        "request": request,
+        "gallery": get_photos("gallery"),   # отдаём фото сразу в HTML, чтобы их видели поисковики
+        **seo_context(request),
+    }
+    return templates.TemplateResponse("site/index.html", context)

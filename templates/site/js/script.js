@@ -1,4 +1,5 @@
 (function(){
+  const DEFAULT_ALT = 'Фотография Киры Каткова — KARKT, Магнитогорск';
   // Загрузка данных с API
   async function loadSiteData() {
     try {
@@ -160,7 +161,7 @@
         const frame = document.createElement('div');
         frame.className = 'frame';
         frame.innerHTML = `
-          <img src="/${photo.filename}" alt="${photo.title || 'Кадр KARKT'}" loading="lazy">
+          <img src="/${photo.filename}" alt="${photo.title || DEFAULT_ALT}" loading="lazy">
           <span class="frame-tag mono">KARKT · ${String(index + 1).padStart(3, '0')}</span>
           <button class="frame-hit" aria-label="Открыть кадр ${index + 1} в полном размере" data-index="${index}" data-src="/${photo.filename}"></button>
         `;
@@ -189,7 +190,7 @@
     function showFrame(i) {
       activeIndex = (i + photos.length) % photos.length;
       lightboxImg.src = '/' + photos[activeIndex].filename;
-      lightboxImg.alt = photos[activeIndex].title || 'Кадр KARKT';
+      lightboxImg.alt = photos[activeIndex].title || DEFAULT_ALT;
       lightboxTag.textContent = 'KARKT · ' + String(activeIndex + 1).padStart(3, '0');
     }
 

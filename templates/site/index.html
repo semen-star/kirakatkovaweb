@@ -5,18 +5,33 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
 <meta name="theme-color" content="#131110" />
 <meta name="color-scheme" content="dark" />
-<title id="siteTitle">Кира Каткова — портретный фотограф и фотожурналист | KARKT</title>
-<meta name="description" id="siteDescription" content="Кира — фотограф, студентка и активистка из Магнитогорска. Портретная и репортажная съёмка: искренние эмоции, живые моменты, готова путешествовать." />
-
-<!-- Open Graph -->
+<title id="siteTitle">{{ title }}</title>
+<meta name="description" id="siteDescription" content="{{ description }}" />
+<meta name="robots" content="index, follow, max-image-preview:large" />
+<link rel="canonical" href="{{ canonical }}" />
+{% if google_verification %}<meta name="google-site-verification" content="{{ google_verification }}" />
+{% endif %}{% if yandex_verification %}<meta name="yandex-verification" content="{{ yandex_verification }}" />
+{% endif %}
+<!-- Open Graph (превью ссылки в VK, Telegram, WhatsApp и т.д.) -->
 <meta property="og:type" content="website" />
-<meta property="og:title" id="ogTitle" content="Кира Каткова — портретный фотограф и фотожурналист | KARKT" />
-<meta property="og:description" id="ogDescription" content="Портретная и репортажная фотосъёмка в Магнитогорске и не только. Искренние эмоции, живые моменты." />
-<meta property="og:image" content="https://i.wfolio.ru/x/D48ScH1DA6jxU_uSH-Or-C0cJClpP-QP/lEAL128xEMPGM2o_rKw_kMPHKR9vAJ80/t-KXYTFXBK9nUYRqJwv1Y6afo_2zpTPg/avM-1eWhkelaqvmjTNyX4c8ctHxnAmrF/V9-nSOojjghmQ0_7jnPNhQ.jpg" />
+<meta property="og:site_name" content="KARKT" />
+<meta property="og:locale" content="ru_RU" />
+<meta property="og:url" content="{{ canonical }}" />
+<meta property="og:title" id="ogTitle" content="{{ title }}" />
+<meta property="og:description" id="ogDescription" content="{{ description }}" />
+<meta property="og:image" content="{{ og_image }}" />
+{% if og_image_is_default %}<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+{% endif %}<meta property="og:image:alt" content="Кира Каткова — портретный фотограф и фотожурналист, KARKT" />
 <meta name="twitter:card" content="summary_large_image" />
 
 <!-- favicon -->
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Crect width='24' height='24' fill='%23131110'/%3E%3Crect x='3' y='7' width='18' height='12' rx='1.4' fill='none' stroke='%23bd7a3f' stroke-width='1.6'/%3E%3Ccircle cx='12' cy='13' r='3.4' fill='none' stroke='%23bd7a3f' stroke-width='1.6'/%3E%3Cpath d='M8 7l1.3-1.8h5.4L16 7' fill='none' stroke='%23bd7a3f' stroke-width='1.6'/%3E%3C/svg%3E" />
+<link rel="icon" href="/favicon.ico" sizes="any" />
+<link rel="icon" href="/static/favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="/static/apple-touch-icon.png" />
+
+<!-- Структурированные данные schema.org -->
+<script type="application/ld+json">{{ json_ld|safe }}</script>
 
 <!-- Шрифты -->
 <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -166,7 +181,13 @@
       <p class="portfolio-count mono" id="galleryCount">8 кадров · плёнка KARKT</p>
     </div>
     <div class="gallery reveal" id="gallery">
-      <!-- Галерея будет загружена через JS -->
+      {% for photo in gallery %}
+      <div class="frame">
+        <img src="/{{ photo.filename|urlencode }}" alt="{{ photo.title or 'Фотография Киры Каткова — KARKT, Магнитогорск' }}" loading="lazy">
+        <span class="frame-tag mono">KARKT · {{ '%03d' % loop.index }}</span>
+        <button class="frame-hit" aria-label="Открыть кадр {{ loop.index }} в полном размере" data-index="{{ loop.index0 }}" data-src="/{{ photo.filename|urlencode }}"></button>
+      </div>
+      {% endfor %}
     </div>
   </div>
 </section>
